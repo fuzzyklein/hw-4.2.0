@@ -8,6 +8,7 @@ from functools import singledispatch, singledispatchmethod
 import os
 from os import listdir
 from pathlib import Path, PosixPath, WindowsPath
+
 from walkdir import filtered_walk
 
 SRC_FILE_EXTS = ("py", "js", "c", 'htm', 'html', "css", "sql", "php",)
