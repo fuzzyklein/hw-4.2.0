@@ -1,0 +1,9 @@
+If the program is not installed and the current directory is the project
+directory:
+
+    ./run [-h] [-V] [-v] [-d] [-r]
+
+If the program is installed:
+
+    ncv
+    python3 -m ncv
