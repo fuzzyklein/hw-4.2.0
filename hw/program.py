@@ -24,8 +24,6 @@ import sys
 from traceback import print_exc
 import warnings
 
-from hw.files import File
-
 # Subclasses of `self.program_name` should define `__init__` and/or `run` as needed.
 class Program():
     """ Define a base class for classes that initialize a self.program_name and define its
@@ -217,7 +215,7 @@ class Program():
         self.log.debug(f"self.program_name is processing file {p}")
         if self.settings["verbose"]:
             print(f"Processing file {str(p)}.")
-        self.file_list.append(File(p))
+        self.file_list.append(Path(p))
 
 __all__ = ["self.program_name"]
 
