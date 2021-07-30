@@ -1,0 +1,1932 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!-- Comments should be allowed here.
+-->
+<head>
+    <title>Bash</title>
+    <meta charset="utf-8"/>
+    <base href="." />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+        <script src="jquery-ui/jquery-ui.js"></script>
+    <!-- <script src="js/script.js"></script> -->
+</head>
+<body>
+  <h1 id="bash">Bash</h1>
+  <p>The <code>bash</code> manual is online <a target="_blank" href="https://www.gnu.org/software/bash/manual/bash.pdf">here</a>.</p>
+  <p>The Linux Documentation Project also has this <a target="_blank" href="http://tldp.org/LDP/Bash-Beginners-Guide/html/index.html">Bash
+    Guide for Beginners</a> &amp; this <a target="_blank" href="http://tldp.org/LDP/abs/html/">Advanced
+  Bash Scripting Guide</a>.</p>
+  <h2>Books</h2>
+  <ul>
+    <li><a target="blank" href="pdf/bash/LearningthebashShell3rdEdition.pdf">Learning Bash</a>
+    </li>
+    <li><a target="blank" href="pdf/bash/ApressProBashProgrammingScriptingtheGNULinuxShell102009ATTiCA.pdf">Pro Bash
+    Scripting</a>
+    </li>
+    <li><a target="blank" href="pdf/awksed/Sed_and_Awk_Second_Edition.pdf">Sed
+    &amp; Awk</a>
+    </li>
+  </ul>
+
+  <h2>Interactive Shell</h2>
+  <p>Type <code>exit</code> or use <code>Ctrl-D</code> (end-of-file) to
+    terminate a session. If it is a login session you can also type the
+    <code>logout</code> command.
+  </p>
+<p>A <em>command line</em> is a line of text ending in <code>\n</code>. The
+first word of a command line is the <em>command</em> and the rest are
+<em>arguments</em> (also called <em>parameters</em>). An <em>option</em> is an
+argument that controls some behavior of the command. Options usually take the
+form of a single hyphen followed by a single letter or a double hyphen followed
+by a word. Options can take arguments of their own.
+</p>
+
+<h2>Files</h2>
+<p>
+</p>
+
+  <h3><code>bash</code> Startup Files</h3>
+  <p>Some of these can be used to modiify the behavior of the Bash shell. Each file is invoked under different circumstances.</p>
+  <p><code>.bashrc</code> executes when a normal terminal emulator is summoned from the main X Windows screen. <code>.bash_profile</code>
+  &amp; <code>.bash_login</code> seem to work if you exit to another console using Ctrl-Alt-Fn, where n is between 1 and whatever.</p>
+
+  <h3>Snippets</h3>
+  <ul>
+  <li><p><code>PS1=\$\&nbsp;</code> sets the prompt to a simple '$' character.
+    There needs to be a space entered at the end after the last '\'. It's useful
+    to generate command line session transcripts for documentation pages with
+    <a target="_blank" href="http://hilite.me"><code>hilite.me</code></a>.
+  </p>
+  </li>
+  </ul>
+
+<h3>Notes</h3>
+<ul>
+<li><p>Using <code>printf</code> instead of <code>echo</code> to write strings
+from the command line to a file makes actual newlines appear in the file instead
+of literally "\n", which is not what we want.</p>
+</li>
+</ul>
+
+  <h2 id="Keys">
+  Keys
+  </h2>
+  <p>
+  <table>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &larr;, Ctrl+B
+  </code>
+  </td>
+  <td>
+  Moves the insertion point to the left.
+  </td>
+  <tr>
+  <td>
+  <code>
+  &rarr;,&nbsp;Ctrl+F
+  </code>
+  </td>
+  <td>
+  Moves the insertion point to the right.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+F
+  </code>
+  </td>
+  <td>
+  Moves the cursord one word forward.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+B
+  </code>
+  </td>
+  <td>
+  Moves the cursor one word backwards.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  &uarr;
+  </code>
+  </td>
+  <td>
+  Scrolls backwards through the command line history.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &darr;
+  </code>
+  </td>
+  <td>
+  Scrolls forward through the command line history.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+R
+  </code>
+  </td>
+  <td>
+  After pressing these keys, enter a string to do a reverse search of the command history.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+S
+  </code>
+  </td>
+  <td>
+  Search forward through the command history for a string.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+P
+  </code>
+  </td>
+  <td>
+  After pressing, type a string and press <code>Enter</code> to see the most recent command line that includes that string.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+N
+  </code>
+  </td>
+  <td>
+  Same as <code>Alt+P</code> but does a forward search.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+&lt;
+  </code>
+  </td>
+  <td>
+  Brings up the first entry of the history list.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+&gt;
+  </code>
+  </td>
+  <td>
+  Brings up the last entry of the history list.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  &crarr;
+  </code>
+  </td>
+  <td>
+  Executes the currently displayed command line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+A
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the beginning of the command line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+E
+  </code>
+  </td>
+  <td>
+  Moes the  cursor the the end of the line.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  Ctrl+D
+  </code>
+  </td>
+  <td>
+  Deletes the character where the cursor is.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Backspace
+  </code>
+  </td>
+  <td>
+  Deletes the character before the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+T
+  </code>
+  </td>
+  <td>
+  Switch postions of the current &amp; previous characters.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+T
+  </code>
+  </td>
+  <td>
+  Switch positions of the current &amp; previous words.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+U
+  </code>
+  </td>
+  <td>
+  Change the current word to uppercase.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+L
+  </code>
+  </td>
+  <td>
+  Change the cureent word to lowercase.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+C
+  </code>
+  </td>
+  <td>
+  Capitalize the first character of the current word.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+V
+  </code>
+  </td>
+  <td>
+  Insert a special character. For example, <code>Ctrl+V+Tab</code.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+K
+  </code>
+  </td>
+  <td>
+  Cut text to the end of the line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+U
+  </code>
+  </td>
+  <td>
+  Cut text to the beginning of the line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+W
+  </code>
+  </td>
+  <td>
+  Cut the word located before the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+D
+  </code>
+  </td>
+  <td>
+  Cut the word following the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+Y
+  </code>
+  </td>
+  <td>
+  Paste the most recently cut text.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+Y
+  </code>
+  </td>
+  <td>
+  Rotate back to previously cut text &amp; paste it.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+C
+  </code>
+  </td>
+  <td>
+  Delete the entire line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Tab
+  </code>
+  </td>
+  <td>
+  Attempts to complete the unique value of an environment variable (<code>$...</code>), username (<code>~...</code>), command, alias, function, or host name (@).
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Esc+?,&nbsp;Tab Tab
+  </code>
+  </td>
+  <td>
+  List the possibilities for automatic completion with the <code>Tab</code> key.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+~
+  </code>
+  </td>
+  <td>
+  Complete the previous text as a usename.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+$
+  </code>
+  </td>
+  <td>
+  Complete the previous text as an environment variable.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+@
+  </code>
+  </td>
+  <td>
+  Complete the previous text as a host name.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Alt+!
+  </code>
+  </td>
+  <td>
+  Complete the text before this point as a command name. Alias, reserved word, shell function, shell built-in command &amp; filenames are checked in that order.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  Ctrl+X+/
+  </code>
+  </td>
+  <td>
+  List possible username completions.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+X+$
+  </code>
+  </td>
+  <td>
+  List possible environment variable completions.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+X+@
+  </code>
+  </td>
+  <td>
+  List possible host name completions.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+X+!
+  </code>
+  </td>
+  <td>
+  List possible command name completions.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  Ctrl+L
+  </code>
+  </td>
+  <td>
+  Clears the screen, leaving the line at the top.
+  </td>
+  </tr>
+
+  </table>
+  </p>
+  <h2 id="Commands">
+  Commands
+  </h2>
+  <p>
+  <table class=bordered>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/pwd.html">pwd</a>
+  </code>
+  </td>
+  <td>
+  Print the name of the current working directory.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/ls.html">ls</a>
+  </code>
+  </td>
+  <td>
+  List the files in the working directory.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/cd.html">cd</a>
+  </code>
+  </td>
+  <td>
+  Change the working directory.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/cd.html">source,&nbsp;.</a>
+  </code>
+  </td>
+  <td>
+  Executes a script in the current environment.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/cd.html">declare</a>
+  </code>
+  </td>
+  <td>
+  Declares a variable and sets its attributes.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/cd.html">shopt</a>
+  </code>
+  </td>
+  <td>
+  Sets shell options.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/less.html">less</a>
+  </code>
+  </td>
+  <td>
+  View text files.
+  <p>
+  <table class=bordered>
+  <caption class=bold_arial>
+  <code>less</code> Commands
+  </caption>
+  <tr>
+  <td>
+  <code>&crarr;</code>
+  </td>
+  <td>
+  Scroll down one line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>Page Up</code> or <code>b</code>
+  </td>
+  <td>
+  Scroll back one page.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>Page Down</code> or <code>Space</code>
+  </td>
+  <td>
+  Scroll forward one page..
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>G</code>
+  </td>
+  <td>
+  Go to the end of the text file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>1G</code>
+  </td>
+  <td>
+  Go to the beginning of the text file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>/<em>characters</em></code>
+  </td>
+  <td>
+  Search forward in the text file for an occurence of the specified <em>characters</em>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>n</code>
+  </td>
+  <td>
+  Repeat the previous search.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>h</code>
+  </td>
+  <td>
+  Display a complete list of <code>less</code> commands &amp; options.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>q</code>
+  </td>
+  <td>
+  Quit.
+  </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/file.html">file</a>
+  </code>
+  </td>
+  <td>
+  Determine the type of a file.
+  <p>
+  <table class=bordered>
+  <caption class=bold_arial>
+  Various Types of Files
+  </caption>
+  <thead class=bold_arial>
+  <tr>
+  <td>
+  File Type
+  </td>
+  <td>
+  Description
+  </td>
+  <td>
+  Viewable as Text?
+  </td>
+  </tr>
+  </thead>
+  <tr>
+  <td>
+  ASCII text
+  </td>
+  <td>
+  The name says it all.
+  </td>
+  <td>
+  yes
+  </td>
+  </tr>
+  <tr>
+  <td>
+  Bourne-Again shell script text
+  </td>
+  <td>
+  A <code>bash</code> script.
+  </td>
+  <td>
+  no
+  </td?
+  </tr>
+  <tr>
+  <td>
+  ELF 32-bit LSB core file
+  </td>
+  <td>
+  A core dump file (a program will create this when it crashes).
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  <tr>
+  <td>
+  ELF 32-bit LSB core executable
+  </td>
+  <td>
+  Executable binary program.
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  <tr>
+  <td>
+  ELF 32-bit LSB shared object
+  </td>
+  <td>
+  A shared library.
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  <tr>
+  <td>
+  GNU tar archive
+  </td>
+  <td>
+  A tape archive file. A common way of storing groups of files.
+  </td>
+  <td>
+  no, use <code>tar tvf</code> to view listing
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>gzip</code> compressed data
+  </td>
+  <td>
+  An archive compressed with <code>gzip</code>.
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  <tr>
+  <td>
+  HTML document text
+  </td>
+  <td>
+  A Web page.
+  </td>
+  <td>
+  yes
+  </td>
+  </tr>
+  <tr>
+  <td>
+  JPEG image data
+  </td>
+  <td>
+  A compressed JPEG image.
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  <tr>
+  <td>
+  PostScript document text
+  </td>
+  <td>
+  A PostScript file.
+  </td>
+  <td>
+  yes
+  </td>
+  </tr>
+  <tr>
+  <td>
+  RPM
+  </td>
+  <td>
+  A Red Hat Package Manager archive.
+  </td>
+  <td>
+  no, use <code>rpm -q</code> to examine contents
+  </td>
+  </tr>
+  <tr>
+  <td>
+  Zip archive data
+  </td>
+  <td>
+  An archive compressed with <code>zip</code>.
+  </td>
+  <td>
+  no
+  </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/cp.html">cp</a>
+  </code>
+  </td>
+  <td>
+  Copy files & directories.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/mv.html">mv</a>
+  </code>
+  </td>
+  <td>
+  Move or rename files & directories.
+  </td>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/rm.html">rm</a>
+  </code>
+  </td>
+  <td>
+  Removes files and directories. Cannot be undone.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/mkdir.html">mkdir</a>
+  </code>
+  </td>
+  <td>
+  Create directories.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/type.html">type</a>
+  </code>
+  </td>
+  <td>
+  Display information about command type.
+  <p>
+  <table class=bordered>
+  <caption class=bold_arial>
+  Command Types
+  </caption>
+  <tr>
+  <td>
+  <em>Executable Program</em>
+  </code>
+  </td>
+  <td>
+  Compiled binary written in C, C++, etc. or a script written in Bash, Perl, etc.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <em>Built-in</em>
+  </td>
+  <td>
+  Command built into the shell itself.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <em>Function</em>
+  </td>
+  <td>
+  Miniature shell script incorporated into the environment.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <em>Alias</em>
+  </td>
+  <td>
+  User-defined command built from other commands.
+  </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/which.html">which</a>
+  </code>
+  </td>
+  <td>
+  Locate a command.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/help.html">help</a>
+  </code>
+  </td>
+  <td>
+  Display reference page for shell built-in. Many programs support the <code>--help</code> option as well. Displays a list of built-in commands if no argument is specified.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  <a href="http://ss64.com/bash/man.html">man</a>
+  </code>
+  </td>
+  <td>
+  Display an online command reference.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  head
+  </code>
+  </td>
+  <td>
+  Displays the first part (10 lines by default) of a file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  tail
+  </code>
+  </td>
+  <td>
+  Displays the last 10 lines of a file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  sort
+  </code>
+  </td>
+  <td>
+  Sorts the lines of a file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  find
+  </code>
+  </td>
+  <td>
+  Searches for files in a directory heirarchy.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  route
+  </code>
+  </td>
+  <td>
+  Displays the Kernel IP routing table.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  uptime
+  </code>
+  </td>
+  <td>
+  Shows how long the system has been running.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  date
+  </code>
+  </td>
+  <td>
+  Displays the date &amp; time.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  gzip
+  </code>
+  </td>
+  <td>
+  Compress or decompress files.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  zless
+  </code>
+  </td>
+  <td>
+  Displays the contents of text files compressed by <code>gzip</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  uniq
+  </code>
+  </td>
+  <td>
+  Removes duplicate lines from standard input.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  grep
+  </code>
+  </td>
+  <td>
+  Outputs lines from standard input that contain a specified pattern of characters.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  fmt
+  </code>
+  </td>
+  <td>
+  Formats text from standard input &amp; sends it to standard output.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  pr
+  </code>
+  </td>
+  <td>
+  Splits input into pages with breaks, headers &amp; footers.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  tr
+  </code>
+  </td>
+  <td>
+  Translates characters. Can, for instance, perform upper/lowercase conversions or change line termination characters from one type to another.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  sed
+  </code>
+  </td>
+  <td>
+  Stream editor. Can perform more sophisticated text translations than <code>tr</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  awk
+  </code>
+  </td>
+  <td>
+  Programming language designed for constructing filters.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  lpr
+  </code>
+  </td>
+  <td>
+  Sends input to the printer.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  echo
+  </code>
+  </td>
+  <td>
+  Prints its text arguments to standard output.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  cat
+  </code>
+  </td>
+  <td>
+  Outputs the concatenation of 2 files to standard output.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  yum
+  </code>
+  </td>
+  <td>
+  Installs or removes software.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  usermod
+  </code>
+  </td>
+  <td>
+  Modifies a user account. Only available as <code>root</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  id
+  </code>
+  </td>
+  <td>
+  Displays information about the current user's identity.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  ps
+  </code>
+  </td>
+  <td>
+  Used to see which programs are running, the processes they are using, &amp; who is running them.
+  </td>
+  <tr>
+  <td>
+  <code>
+  hostname
+  </code>
+  </td>
+  <td>
+  Used to get or set the host name or the NIS domain name.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  alias
+  </code>
+  </td>
+  <td>
+  Defines or (without arguments) displays aliases.
+  </td>
+  </tr>
+  <td>
+  <code>
+  unalias
+  </code>
+  </td>
+  <td>
+  Removes aliases.
+  </td>
+  </tr>
+
+  <tr>
+  <td>
+  <code>
+  history&nbsp;[<em>n</em>]
+  </code>
+  </td>
+  <td>
+  Displays the <code><em>n</em></code> most recent command lines. If no number is given, displays the entire history of command lines.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  fc&nbsp;<em>n</em>
+  </code>
+  </td>
+  <td>
+  Opens the given command line from the history list in a text editor, where you can make changes. The command runs when you exit the editor. If 2 numbers are given a range of commands is opened in the editor and all of them are run in sequence when you close the editor.
+  </td>
+  </tr>
+  <td>
+  <code>
+  export
+  </code>
+  </td>
+  <td>
+  Marks names for automatic export to the environment of subsequently executed commands, assigning them values if they are supplied.
+  </td>
+  </tr>
+  <td>
+  <code>
+  more
+  </code>
+  </td>
+  <td>
+  File perusal utility for CRT viewing.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  unset
+  </code>
+  </td>
+  <td>
+  Erases the value of an environment variable.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  at
+  </code>
+  </td>
+  <td>
+  Reads commands from standard input or a specified file which are to be executed at a later time.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  jobs
+  </code>
+  </td>
+  <td>
+  Displays the commands currently running in the background.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  fg
+  </code>
+  </td>
+  <td>
+  Brings any command in the <code>jobs</code> list to the foreground. Must have an argument preceded by the <code>%</code> operator.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  bg
+  </code>
+  </td>
+  <td>
+  Given a stopped process, causes it to run in the background.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  touch
+  </code>
+  </td>
+  <td>
+  Creates an empty file.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  chmod&nbsp;<em>nnn</em>&nbsp;<em>file</em>, chmod&nbsp;[ugoa]&nbsp;[+|-]&nbsp;[rwx]
+  </code>
+  </td>
+  <td>
+
+  Changes the permissions associated with a file. The 3 digits in the first argument of the first version represent permissions for the user, group &amp; everyone else, in that order. Let <code>r=4, w=2, x=1</code>. Then add the values that represent the permissions you wish to assign for each digit &amp; add them up.
+  </p>
+  In the second version the first set of characters represents the category of users the change will apply to, where <code>u=user</code>, <code>g=group</code>, <code>o=others</code>, &amp; <code>a=all</code>. <code>+</code> adds the given permissions &amp; <code>-</code> removes them. <code>r=read</code>, <code>w=write</code> &amp; <code>x=execute</code>.
+  </p>
+  The <code>-R</code> option runs the command recursively for a directory &amp; its subdirectories.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  umask
+  </code>
+  </td>
+  <td>
+  Displays the <code>umask</code> value which, by default, masks the permission values of <code>666</code> for a new file &amp; <code>777</code> for a new directory.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  vi
+  </code>
+  </td>
+  <td>
+  Edits text files. Has 2 modes, <code>command</code> &amp; <code>input</code>. Always starts in command mode.
+  <table class=bordered>
+  <caption class=bold_arial>
+  Command Mode
+  </caption>
+  <tr>
+  <td>
+  <code>
+  a
+  </code>
+  </td>
+  <td>
+  <code>Add</code>. Allows text input to the <em>right</em> of the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  i
+  </code>
+  </td>
+  <td>
+  <code>Input</code>. Allows text input to the <em>left</em> of the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &uarr;,&nbsp;k
+  </code>
+  </td>
+  <td>
+  Move the cursor up one line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &darr;,&nbsp;j
+  </code>
+  </td>
+  <td>
+  Move the cursor down one line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &larr;,&nbsp;h,&nbsp;Backspace
+  </code>
+  </td>
+  <td>
+  Move the cursor to the left one character.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  &rarr;,&nbsp;l,&nbsp;Space bar
+  </code>
+  </td>
+  <td>
+  Move the cursor to the right one character.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  w
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the beginning of the next word.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  b
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the beginning of the previous word.
+  </td>
+  <tr>
+  <td>
+  <code>
+  0&nbsp;(zero)
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the beginning of the current line.
+  </td>
+  <tr>
+  <td>
+  <code>
+  $
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the end of the current line.
+  </td>
+  <tr>
+  <td>
+  <code>
+  H
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the upper-left corner (first line) of the screen.
+  </td>
+  <tr>
+  <td>
+  <code>
+  M
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the first character of the middle line of the screen.
+  </td>
+  <tr>
+  <td>
+  <code>
+  L
+  </code>
+  </td>
+  <td>
+  Moves the cursor to the lower-left corner (last line) of the screen.
+  </td>
+  <tr>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+F
+  </code>
+  </td>
+  <td>
+  Page ahead one page at a time.
+  </td>
+  <tr>
+  <td>
+  <code>
+  Ctrl+B
+  </code>
+  </td>
+  <td>
+  Page back one page at a time.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+D
+  </code>
+  </td>
+  <td>
+  Page ahead 1/2 page at a time.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+U
+  </code>
+  </td>
+  <td>
+  Page back 1/2 page at a time.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  G
+  </code>
+  </td>
+  <td>
+  Go the last line of the file.
+  </td>
+  <tr>
+  <td>
+  <code>
+  1G
+  </code>
+  </td>
+  <td>
+  Go to the first line of the file. Use any other number to go to the corresponding line of the file.
+  </td>
+  <tr>
+  <td>
+  <code>
+  /,<em>string</em>&nbsp;?<em>string</em>
+  </code>
+  </td>
+  <td>
+  Search forward (<code>/</code>) or backward (<code>?</code>) for <em>string</em>. <code>.*</code> acts as a wildcard for any number of characters and enclosing a set of characters in <code>[]</code> matches any of the characters in the set.
+  </td>
+  <tr>
+  <td>
+  <code>
+  :g/<em>word</em>
+  </code>
+  </td>
+  <td>
+  Searches for <code><em>word</em></code> and prints every occurence of that line from the file. If there is more than a screenful the output is piped to the <code>more</code> command.
+  </td>
+  <tr>
+  <td>
+  <code>
+  :s/<em>word1</em>/<em>word2</em>
+  </code>
+  </td>
+  <td>
+  Substitutes <code><em>word2</em></code> for <code><em>word1</em
+  </td>
+  <tr>
+  <td>
+  <code>
+  :g/<em>word1</em>/s//<em>word2</em>
+  </code>
+  </td>
+  <td>
+  Substitutes the first occurence of <code><em>word1</em></code> on every line of the file with <code><em>word2</em></code>.
+  </td>
+  <tr>
+  <td>
+  <code>
+  :g/<em>word1</em>/s//<em>word2</em>/g
+  </code>
+  </td>
+  <td>
+  Substitutes every occurenceof <code><em>word1</em></code> with <code><em>word2</em></code> in the entire file.
+  </td>
+  <tr>
+  <td>
+  <code>
+  :g/<em>word1</em>/s//<em>word2</em>/gp
+  </code>
+  </td>
+  <td>
+  Substitutes every occurence of <code><em>word1</em></code> with <code><em>word2</em></code> in the entire file, then prints each line so you can see the changes, piping it through <code>more</code> if the output fills more than one page.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  x
+  </code>
+  </td>
+  <td>
+  Deletes the character under the cursor.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  X
+  </code>
+  </td>
+  <td>
+  Deletes the character directly before the cursor.
+  </td>
+  <tr>
+  <td>
+  <code>
+  dw
+  </code>
+  </td>
+  <td>
+  Deletes from the current character to the end of the current word.
+  </td>
+  <tr>
+  <td>
+  <code>
+  d$
+  </code>
+  </td>
+  <td>
+  Deletes from the current character to the end of the current line.
+  </td>
+  <tr>
+  <td>
+  <code>
+  d0
+  </code>
+  </td>
+  <td>
+  Deletes from the previous character to the beginning of the current line.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  ZZ,&nbsp;:wq
+  </code>
+  </td>
+  <td>
+  Save the current changes to the file and exit.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  :w
+  </code>
+  </td>
+  <td>
+  Save the current file but continue editing.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  u
+  </code>
+  </td>
+  <td>
+  Undo the previous change. Press continually to undo previous changes.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+R
+  </code>
+  </td>
+  <td>
+  Redo the previously undone change.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  :q
+  </code>
+  </td>
+  <td>
+  Quit the current file. Works only if there are no unsaved changes.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  :!&nbsp;<em>command</em>
+  </code>
+  </td>
+  <td>
+  Runs the given command.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  Ctrl+G
+  </code>
+  </td>
+  <td>
+  Displays the name of the file that you are editing, the current line that you are on, the total number of lines in the file, the percentage of the file that's behind the cursor, &amp; the column number that the cursor is on.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  :q!
+  </code>
+  </td>
+  <td>
+  Quit the current file &amp; <em>don't</em> save any changes.
+  </td>
+  </tr>
+  </table>
+  <p>
+  Most <code>vi</code> commands can be preceded with a number to have it repeated that many times.
+  </p>
+  <table class=bordered>
+  <caption class=bold_arial>
+  Input Mode
+  </caption>
+  <tr>
+  <td>
+  <code>
+  Esc
+  </code>
+  </td>
+  <td>
+  Returns to command mode.
+  </td>
+  </tr>
+
+  </table>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  passwd&nbsp;<em>user_name</em>
+  </code>
+  </td>
+  <td>
+  Set the password for the given user. Only available to <code>root</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  sudo
+  </code>
+  </td>
+  <td>
+  Run one command line as <code>root</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  su
+  </code>
+  </td>
+  <td>
+  Switch User. When used without arguments switches to <code>root</code>. With a hyphen it reads in the root user's environment as well. You can switch to any other user by adding their username (after the hyphen).
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  fdisk
+  </code>
+  </td>
+  <td>
+  Modifies disk partitions.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  fsck
+  </code>
+  </td>
+  <td>
+  Check file systems.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  init
+  </code>
+  </td>
+  <td>
+  Change system states.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  useradd
+  </code>
+  </td>
+  <td>
+  Manage user accounts.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  automount
+  </code>
+  </td>
+  <td>
+  Add mount points for automounting file systems.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  mount
+  </code>
+  </td>
+  <td>
+  Anyone can use this command to list mounted file systems, and the root user can use it to mount them.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  gcc
+  </code>
+  </td>
+  <td>
+  Compiles C files. Multiple files can be given as arguments.
+  <table>
+  <caption>
+  <code>gcc</code> Options
+  </caption>
+  <tr>
+  <td>
+  <code>
+  -o
+  </code>
+  </td>
+  <td>
+  Specifies the name of the output file. Should be followed by a space, then the name.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  -I
+  </code>
+  </td>
+  <td>
+  Specifies an additional directory to search for header files included in source files. Should not be followed by a space, just the name of the directory.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  -L
+  </code>
+  </td>
+  <td>
+  Specifies an additional directory to search for code libraries.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  -l
+  </code>
+  </td>
+  <td>
+  Specifies a code library to search for and add to the output file. Should prefer shared libraries to static ones.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  -c
+  </code>
+  </td>
+  <td>
+  Prevents the compiler from trying to make a complete executable from the source files. Compiles an object file instead for use as a library.
+  </td>
+  </tr>
+  </table>
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  g++
+  </code>
+  </td>
+  <td>
+  C++ compiler very similar to <code>gcc</code>.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  ar
+  </code>
+  </td>
+  <td>
+  Create, modify, and extract from archives.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  nm
+  </code>
+  </td>
+  <td>
+  Lists the functions present in an archived code library.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  ldd
+  </code>
+  </td>
+  <td>
+  Lists the shared libraries required by a given program.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>
+  read
+  </code>
+  </td>
+  <td>
+  Assigns user input to a variable.
+  </td>
+  </tr>
+  <tr>
+  <td>
+  <code>test</code>,&nbsp;<code>[</code>
+  </td>
+  <td>
+  Used with a variety of <a href="BashShellScripting.html#test-options">options</a> in conditional commands.
+  </td>
+  </tr>
+  </table>
+
+
+</body>
+</html>
