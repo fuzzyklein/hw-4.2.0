@@ -8,14 +8,12 @@ def main():
 
         Call the `run` method of a class descended from `py.Program`.
     """
-    print("Hello, World!")
+    # print("Hello, World!")
     try:
-        if False: warn("What the fuck? :D")
+        HelloWorld().run()
     except:
         print_exc()
-        exit()
-    HelloWorld().run()
-    print("Goodbye!")
+        exit(1)
 
 if __name__ == "__main__":
     main()

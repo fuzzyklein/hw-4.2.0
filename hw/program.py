@@ -30,8 +30,8 @@ class Program():
         behavior.
     """
     def __init__(self):
-        self.debug = True
-        self.verbose = True
+        self.debug = False
+        self.verbose = False
         self.configure()
         self.program_name = self.config["DEFAULT"]["program"]
         self.getenv()

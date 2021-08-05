@@ -87,7 +87,7 @@ class Driver(Cmd):
             print (eval(args))
         except:
             try:
-                print(run(args))
+                print(check_output(args))
             except:
                 print_exc()
 
