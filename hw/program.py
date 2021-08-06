@@ -1,8 +1,3 @@
-#! /usr/bin/env python3.8
-# # self.program_name
-#
-# Define a `self.program_name` class.
-
 from argparse import ArgumentParser
 from collections import ChainMap
 from configparser import ConfigParser
@@ -23,8 +18,8 @@ import re
 import sys
 from traceback import print_exc
 import warnings
+import xdg.BaseDirectory
 
-# Subclasses of `self.program_name` should define `__init__` and/or `run` as needed.
 class Program():
     """ Define a base class for classes that initialize a self.program_name and define its
         behavior.
@@ -55,7 +50,10 @@ class Program():
         if self.settings["verbose"]: print("Program initialized.")
 
     def configure(self):
-        self.config_file = Path(__file__).parent.parent / "etc/config.ini"
+        self.config_file = Path(xdg.BaseDirectory.xdg_config_home) / "config.ini"
+        if not self.config_file.exists():
+           self.config_file = Path(__file__).parent.parent / "etc/config.ini"
+        assert(self.config_file.exists())
         if self.debug:
             print(f"Configuration file: {self.config_file}")
         assert(self.config_file.exists())
