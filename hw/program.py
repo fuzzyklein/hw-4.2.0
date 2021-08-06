@@ -69,7 +69,7 @@ class Program():
 
 
     def getenv(self):
-        self.env = {k : v for k, v in environ.items() if k[0].islower()}
+        self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
 
     def getargs(self):
         parser = ArgumentParser(self.program_name, Path(self.config["ARGUMENTS"]["epilog"]).read_text())
