@@ -8,7 +8,7 @@ class HelloWorld(Program):
     def run(self):
         if self.settings['verbose']:
             print("Running the Hello World! program class' `run` method.")
-        if self.settings['debug']: assert 'startup' in self.settings.keys()
+        # if self.settings['debug']: assert 'startup' in self.settings.keys()
         super().run()
         print("Hello, World!")
         if self.settings['testing']: Driver(self.settings).cmdloop()

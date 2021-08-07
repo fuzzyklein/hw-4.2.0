@@ -37,6 +37,7 @@ class Program():
         """ Initialize the object. """
         self.log.debug(" Initializing program...")
 
+        self.settings = dict(self.settings)
         assert(self.settings)
         if self.settings["verbose"]:
             s = StringIO()
@@ -215,14 +216,15 @@ class Program():
             print(f"Processing file {str(p)}.")
         self.file_list.append(Path(p))
 
-__all__ = ["self.program_name"]
+__all__ = ["Program"]
 
 if __name__ == "__main__":
-    print(f"Testing {__file__}...")
-    try:
-        import testing
-    except ModuleNotFoundError:
-        import py.testing
+    pass
+    # print(f"Testing {__file__}...")
+    # try:
+    #     import testing
+    # except ModuleNotFoundError:
+    #     import py.testing
 
 
 # ## References

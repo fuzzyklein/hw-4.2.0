@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 virtual=0
-venv=/home/fuzzy/.venv-3.9
+venv=.venv
 
 function venv() {
   printf "Virtual environment $venv does not exist.\n"
@@ -18,7 +18,7 @@ function venv() {
 if [ ! -d ${venv} ]; then
    virtual=1; venv a
 fi
-[[ $virtual ]] && source ~/.venv-3.9/bin/activate; printf "venv active\n"
+[[ $virtual ]] && source $venv/bin/activate; printf "venv active\n"
 export PYTHONSTARTUP=hw.startup.py
 export startup=PYTHONSTARTUP
 python3 -m hw $@
