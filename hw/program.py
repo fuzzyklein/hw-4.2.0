@@ -69,12 +69,20 @@ class Program():
                     self.categories.append(m.group(1))
         else:
             print("No configuration file exists.")
-            self.config = None
+            self.config = ConfigParser()
+            config['DEFAULT'] = { 'program' : str(Path(__file__).parent.name),
+                                  'version' : '4.2.0'
+                                }
+            config['ARGUMENTS'] = { 'args_json_file' : str(Path(__file__).parent.parent / 'etc/arguments.json') }
+            config['ENVIRONMENT'] = dict()
+            config['program'] = { 'logfile' : 'log/program.log' }
 
     def getenv(self):
         self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
 
     def getargs(self):
+        self.args = None
+
         parser = ArgumentParser(self.program_name, Path(self.config["ARGUMENTS"]["epilog"]).read_text())
         assert(parser)
         f = open(self.config["ARGUMENTS"]["args_json_file"])
