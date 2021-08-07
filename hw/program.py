@@ -3,15 +3,13 @@ from collections import ChainMap
 from configparser import ConfigParser
 import fileinput
 from glob import glob
-import json
-import logging
 from io import StringIO
+import json
 import logging
 import os
 from os import environ
 import os.path
-from os import chdir as cd
-from os import chdir, listdir
+from os import chdir as cd, listdir
 from pathlib import Path
 from pprint import pprint as pp
 import re
@@ -62,37 +60,59 @@ class Program():
             assert(self.config)
             self.config.read(self.config_file)
 
-            self.categories = list()
+        else:
+            print("No configuration file exists.")
+            self.config = ConfigParser()
+            self.config['DEFAULT'] = { 'program' : str(Path(__file__).parent.name),
+                                  'version' : '4.2.0'
+                                }
+            self.config['ARGUMENTS'] = { 'args_json_file' : str(Path(__file__).parent.parent / 'etc/arguments.json'),
+                                         'epilog' : str(Path(__file__).parent.parent / 'data/epilog.txt')
+                                       }
+            self.config['ENVIRONMENT'] = dict()
+            self.config['program'] = { 'logfile' : 'log/program.log' }
+
+        self.categories = list()
+        if Path(self.config_file).exists():
             for s in Path(self.config_file).read_text().split('\n'):
                 m = re.match(r'\[(\w*)\]', s)
                 if m:
                     self.categories.append(m.group(1))
         else:
-            print("No configuration file exists.")
-            self.config = ConfigParser()
-            config['DEFAULT'] = { 'program' : str(Path(__file__).parent.name),
-                                  'version' : '4.2.0'
-                                }
-            config['ARGUMENTS'] = { 'args_json_file' : str(Path(__file__).parent.parent / 'etc/arguments.json') }
-            config['ENVIRONMENT'] = dict()
-            config['program'] = { 'logfile' : 'log/program.log' }
+            self.categories = self.config.keys()
 
     def getenv(self):
         self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
 
     def getargs(self):
         self.args = None
+        if self.config:
+            EPILOG_FILE = Path(self.config["ARGUMENTS"]["epilog"]).read_text()
+        else:
+            EPILOG_FILE = """
+If the program is not installed and the current directory is the project
+directory:
 
-        parser = ArgumentParser(self.program_name, Path(self.config["ARGUMENTS"]["epilog"]).read_text())
+    ./run [-h] [-V] [-v] [-d] [-r]
+
+If the program is installed:
+
+    program
+    python3 -m program
+
+"""
+        parser = ArgumentParser(self.program_name, EPILOG_FILE)
         assert(parser)
-        f = open(self.config["ARGUMENTS"]["args_json_file"])
-        try:
-            PARSER_ARGUMENTS = json.load(f)
-        except json.JSONDecodeError:
-            print_exc()
-            PARSER_ARGUMENTS = None
-            # exit(1)
-        f.close()
+        if Path(self.config['ARGUMENTS']['args_json_file']).exists():
+            f = open(self.config["ARGUMENTS"]["args_json_file"])
+            try:
+                PARSER_ARGUMENTS = json.load(f)
+            except json.JSONDecodeError:
+                print_exc()
+                PARSER_ARGUMENTS = None
+                # exit(1)
+            f.close()
+        else: PARSER_ARGUMENTS = None
 
         if PARSER_ARGUMENTS != None:
             for arg in PARSER_ARGUMENTS:
@@ -102,10 +122,19 @@ class Program():
             self.args = None
 
     def getset(self):
-        self.settings = ChainMap(self.env, *[self.config[s] for s in self.categories]) \
-                        if self.config else ChainMap(self.env)
+        if self.config:
+            self.settings = ChainMap(self.env, *[self.config[s] for s in self.categories])
+        else: self.config = ChainMap(self.env)
         assert(self.settings)
         if self.args: self.settings = self.settings.new_child(vars(self.args))
+        if not 'verbose' in self.settings.keys():
+            self.settings['verbose'] = False
+        if not 'debug' in self.settings.keys():
+            self.settings['debug'] = False
+        if not 'args' in self.settings.keys():
+            self.settings['args'] = list()
+        if not 'testing' in self.settings.keys():
+            self.settings['testing'] = False
 
     def startlog(self):
         assert(self.settings["logfile"])
