@@ -1,0 +1,14 @@
+[[[],
+  {"dest": "args",
+   "metavar": "ARGUMENTS",
+   "nargs": "*",
+   "help": "Files to be processed."
+  }
+ ],
+
+      [["-V", "--version"], {"action": "version", "version": "ncv 0.0.0", "help": "Display the program name and version, then exit."}],
+      [["-d", "--debug"], {"action": "store_true", "dest": "debug", "help": "Set to run the program in DEBUG mode."}],
+      [["-v", "--verbose"], {"action": "store_true", "dest": "verbose", "help": "Display extra information."}],
+      [["-r", "--recursive"], {"action": "store_true", "dest": "recursive", "help": "Process files recursively."}],
+      [["-t", "--testing"], {"action": "store_true", "dest": "testing", "help": "Run the `doctest`s in `main.py`"}]
+    ]

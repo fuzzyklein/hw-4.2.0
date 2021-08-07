@@ -51,23 +51,25 @@ class Program():
         if self.settings["verbose"]: print("Program initialized.")
 
     def configure(self):
-        self.config_file = Path(xdg.BaseDirectory.xdg_config_home) / "config.ini"
+        self.config_file = Path(xdg.BaseDirectory.xdg_config_home) / f"{Path(__file__).parent.name}/config.ini"
         if not self.config_file.exists():
            self.config_file = Path(__file__).parent.parent / "etc/config.ini"
-        assert(self.config_file.exists())
-        if self.debug:
-            print(f"Configuration file: {self.config_file}")
-        assert(self.config_file.exists())
-        self.config = ConfigParser()
-        assert(self.config)
-        self.config.read(self.config_file)
+        if self.config_file.exists():
+            if self.debug:
+                print(f"Configuration file: {self.config_file}")
+            assert(self.config_file.exists())
+            self.config = ConfigParser()
+            assert(self.config)
+            self.config.read(self.config_file)
 
-        self.categories = list()
-        for s in Path(self.config_file).read_text().split('\n'):
-            m = re.match(r'\[(\w*)\]', s)
-            if m:
-                self.categories.append(m.group(1))
-
+            self.categories = list()
+            for s in Path(self.config_file).read_text().split('\n'):
+                m = re.match(r'\[(\w*)\]', s)
+                if m:
+                    self.categories.append(m.group(1))
+        else:
+            print("No configuration file exists.")
+            self.config = None
 
     def getenv(self):
         self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
@@ -92,7 +94,8 @@ class Program():
             self.args = None
 
     def getset(self):
-        self.settings = ChainMap(self.env, *[self.config[s] for s in self.categories])
+        self.settings = ChainMap(self.env, *[self.config[s] for s in self.categories]) \
+                        if self.config else ChainMap(self.env)
         assert(self.settings)
         if self.args: self.settings = self.settings.new_child(vars(self.args))
 
