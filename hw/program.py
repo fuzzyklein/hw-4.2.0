@@ -11,6 +11,7 @@ from os import environ
 import os.path
 from os import chdir as cd, listdir
 from pathlib import Path
+import pdb
 from pprint import pprint as pp
 import re
 import sys
@@ -33,7 +34,7 @@ class Program():
         self.startlog()
 
         """ Initialize the object. """
-        self.log.debug(" Initializing program...")
+        self.dbgout(" Initializing program...")
 
         self.settings = dict(self.settings)
         assert(self.settings)
@@ -47,6 +48,18 @@ class Program():
 
         # self.get_input()
         if self.settings["verbose"]: print("Program initialized.")
+
+    def dbgout(self, s):
+        if self.log:
+            self.dbgout(s)
+        else:
+            print(s)
+
+    def infout(self, s):
+        if self.log:
+            self.infout(s)
+        else:
+            print(s)
 
     def configure(self):
         self.config_file = Path(xdg.BaseDirectory.xdg_config_home) / f"{Path(__file__).parent.name}/config.ini"
@@ -135,30 +148,35 @@ If the program is installed:
             self.settings['args'] = list()
         if not 'testing' in self.settings.keys():
             self.settings['testing'] = False
+        if not 'logfile' in self.settings.keys():
+            self.settings['logfile'] = str(Path(__file__).parent.parent) / f'log/{self.program_name}.log'
 
     def startlog(self):
-        assert(self.settings["logfile"])
-        log_level = logging.WARNING
-        if self.settings["verbose"]:
-            self.verbose = True
-            log_level = logging.INFO
-        if self.settings["debug"]:
-            self.debug = True
-            self.verbose = True
-            self.settings["verbose"] = True
-            log_level = logging.DEBUG
+        # pdb.set_trace()
+        # print(self.settings['logfile'])
+        if 'logfile' in self.settings.keys() and Path(self.settings["logfile"]).exists():
+            log_level = logging.WARNING
+            if self.settings["verbose"]:
+                self.verbose = True
+                log_level = logging.INFO
+            if self.settings["debug"]:
+                self.debug = True
+                self.verbose = True
+                self.settings["verbose"] = True
+                log_level = logging.DEBUG
 
-        logging.basicConfig(filename=self.settings["logfile"], level=log_level, filemode='w')
-        self.log = logging.getLogger("root")
-        logging.captureWarnings(True)
-        self.log.debug(f"loading {__name__} module")
+            logging.basicConfig(filename=self.settings["logfile"], level=log_level, filemode='w')
+            self.log = logging.getLogger("root")
+            logging.captureWarnings(True)
+            self.dbgout(f"loading {__name__} module")
 
-        self.log = logging.getLogger(__name__)
+            self.log = logging.getLogger(__name__)
+        else: self.log = None
 
 
     def run(self):
         """ Override this method to provide all the application code if using this class for a command line script. """
-        self.log.info("Processing arguments...")
+        self.infout("Processing arguments...")
         self.process_args()
 
     def output(self, s):
@@ -167,13 +185,13 @@ If the program is installed:
 
     def get_input(self):
         """ Check for standard input coming in through a pipe. """
-        self.log.info(" Getting input text...")
+        self.infout(" Getting input text...")
         if self.settings["debug"]:
             s = StringIO()
             print("sys.argv:\n", file=s)
             pp(sys.argv[1:], stream=s)
             print(file=s)
-            self.log.debug(s.getvalue())
+            self.dbgout(s.getvalue())
         args = sys.argv[1:]
         for f in sys.argv[1:]:
             p = Path(f)
@@ -204,20 +222,20 @@ If the program is installed:
             print("Arguments detected:", file=s)
             print(file=s)
             pp(self.settings["args"], stream=s)
-            self.log.debug(s.getvalue())
+            self.dbgout(s.getvalue())
         assert("args" in self.settings.keys())
         self.file_list = list()
         if "args" in self.settings.keys():
 
             for f in self.settings["args"]:
                 assert(type(f) is str)
-                self.log.info(f" Processing {f}...")
+                self.infout(f" Processing {f}...")
                 for name in glob(f, recursive=self.settings["recursive"]):
 
                     self.process_fname(name)
 
     def process_fname(self, s):
-        self.log.debug("Processing a file name...")
+        self.dbgout("Processing a file name...")
         p = Path(s)
         if not p.exists():
             if self.settings["verbose"]:
@@ -251,7 +269,7 @@ If the program is installed:
                     self.process_fname(os.path.join(str(p), f))
 
     def process_file(self, p):
-        self.log.debug(f"self.program_name is processing file {p}")
+        self.dbgout(f"self.program_name is processing file {p}")
         if self.settings["verbose"]:
             print(f"Processing file {str(p)}.")
         self.file_list.append(Path(p))
