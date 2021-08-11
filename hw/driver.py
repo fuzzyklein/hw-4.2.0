@@ -16,7 +16,7 @@ from subprocess import check_output
 import sys
 from traceback import print_exc
 
-from hw.program import Program
+from program import Program
 
 class Driver(Cmd):
     """ Define a base class for classes that initialize a program and define its
@@ -30,7 +30,7 @@ class Driver(Cmd):
         log.setLevel(logging.WARNING)
         log.addHandler(logging.NullHandler())
         log.debug(f"loading {__name__} module")
-        
+
         s = repr(type(self))[:-2].split('.')[-1]
         self.prompt = '(' + s + '): '
         if settings:

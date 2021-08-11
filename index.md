@@ -1,4 +1,4 @@
-# hw-4.2.0
+# `hw`
 
 Skeleton program that sets up the following functions:
 
@@ -18,7 +18,3 @@ Skeleton program that sets up the following functions:
 * An easily-managed TODO list
 
 ## Examples
-    
-    
-    
-

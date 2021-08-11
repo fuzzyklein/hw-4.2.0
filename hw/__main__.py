@@ -1,3 +1,5 @@
+from pprint import pprint as pp
+import sys
 from traceback import print_exc
 from warnings import warn
 
@@ -10,6 +12,7 @@ def main():
     """
     # print("Hello, World!")
     try:
+        pp(sys.path)
         HelloWorld().run()
     except:
         print_exc()

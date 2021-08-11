@@ -18,8 +18,8 @@ function venv() {
 if [ ! -d ${venv} ]; then
    virtual=1; venv a
 fi
-[[ $virtual ]] && source $venv/bin/activate; printf "venv active\n"
-export PYTHONSTARTUP=hw.startup.py
+[[ $virtual ]] && source $venv/bin/activate; # printf "venv active\n"
+export PYTHONSTARTUP=hw/startup.py
 export startup=PYTHONSTARTUP
 python3 -m hw $@
 [[ $virtual ]] && deactivate
