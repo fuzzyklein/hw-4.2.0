@@ -166,7 +166,7 @@ If the program is installed:
         if not 'testing' in self.settings.keys():
             self.settings['testing'] = False
         if not 'logfile' in self.settings.keys():
-            self.settings['logfile'] = str(Path(__file__).parent.parent) / f'log/{self.program_name}.log'
+            self.settings['logfile'] = str(self.BASEDIR) / f'log/{self.program_name}.log'
 
     def startlog(self):
         # pdb.set_trace()
