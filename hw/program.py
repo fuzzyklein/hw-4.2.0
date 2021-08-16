@@ -37,7 +37,7 @@ If the program is installed:
     python3 -m program
 
 """
-    def __init__(self):
+    def __init__(self, settings=None):
         """ Initialize the object. """
         self.DEBUG = True
         self.VERBOSE = True
@@ -46,18 +46,20 @@ If the program is installed:
         if self.VERBOSE:
             print(f'Base directory: {self.BASEDIR}')
             print(f'Program name: {self.PROGRAM_NAME}')
-        self.configure()
-        self.program_name = self.config["DEFAULT"]["program"]
-        self.getenv()
-        self.getargs()
-        self.getset()
+        if settings: self.settings = settings
+        else:
+            self.configure()
+            self.program_name = self.config["DEFAULT"]["program"]
+            self.getenv()
+            self.getargs()
+            self.getset()
+
+            self.settings = dict(self.settings)
         self.DEBUG = self.settings['debug']
         self.VERBOSE = self.settings['verbose']
         self.startlog()
 
         self.debug(" Initializing program...")
-
-        self.settings = dict(self.settings)
         assert(self.settings)
         if self.settings["verbose"]:
             s = StringIO()
@@ -252,7 +254,7 @@ If the program is installed:
                     self.process_fname(name)
 
     def process_fname(self, s):
-        self.debug("Processing a file name...")
+        self.debug(f"Processing {s}...")
         p = Path(s)
         if not p.exists():
             if self.settings["verbose"]:
@@ -278,12 +280,11 @@ If the program is installed:
             process_file(p)
 
     def process_dir(self, p):
-        if not ignore(p):
-            if self.settings["verbose"]:
-                print(f"Processing directory {str(p)}")
-            if self.settings["recursive"]:
-                for f in listdir(str(p)):
-                    self.process_fname(os.path.join(str(p), f))
+        if self.settings["verbose"]:
+            print(f"Processing directory {str(p)}")
+        if self.settings["recursive"]:
+            for f in listdir(str(p)):
+                self.process_fname(os.path.join(str(p), f))
 
     def process_file(self, p):
         self.debug(f"self.program_name is processing file {p}")
