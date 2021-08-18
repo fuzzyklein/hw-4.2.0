@@ -12,7 +12,7 @@ def main():
     """
     # print("Hello, World!")
     try:
-        pp(sys.path)
+        # pp(sys.path)
         HelloWorld().run()
     except:
         print_exc()

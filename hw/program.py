@@ -39,8 +39,8 @@ If the program is installed:
 """
     def __init__(self, settings=None):
         """ Initialize the object. """
-        self.DEBUG = True
-        self.VERBOSE = True
+        self.DEBUG = False
+        self.VERBOSE = False
         self.BASEDIR = Path(__file__).parent.parent.absolute()
         self.PROGRAM_NAME = self.BASEDIR.stem.split('-')[0]
         if self.VERBOSE:
@@ -92,7 +92,7 @@ If the program is installed:
         if not self.config_file.exists():
            self.config_file = Path(__file__).parent.parent / "etc/config.ini"
         if self.config_file.exists():
-            if self.debug:
+            if self.DEBUG:
                 print(f"Configuration file: {self.config_file}")
             assert(self.config_file.exists())
             self.config = ConfigParser()
@@ -246,7 +246,7 @@ If the program is installed:
         self.file_list = list()
         if "args" in self.settings.keys():
 
-            for f in self.settings["args"]:
+            for f in filter(lambda s: self.settings["all"] or not s.startswith('.'), self.settings["args"]):
                 assert(type(f) is str)
                 self.info(f" Processing {f}...")
                 for name in glob(f, recursive=self.settings["recursive"]):
@@ -272,7 +272,7 @@ If the program is installed:
     def process_link(self, p):
         if not self.settings["follow"]:
             if self.settings["verbose"]:
-                print(f"File {s} is a symbolic link.")
+                self.info(f"File {str(p)} is a symbolic link.")
                 return
             else:
                 pass
@@ -281,7 +281,7 @@ If the program is installed:
 
     def process_dir(self, p):
         if self.settings["verbose"]:
-            print(f"Processing directory {str(p)}")
+            self.info(f"Processing directory {str(p)}")
         if self.settings["recursive"]:
             for f in listdir(str(p)):
                 self.process_fname(os.path.join(str(p), f))

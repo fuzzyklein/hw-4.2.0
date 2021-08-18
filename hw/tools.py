@@ -1,6 +1,8 @@
 from cmd import Cmd
+from configparser import ConfigParser
 from functools import partial, wraps
 from glob import glob
+from pathlib import Path
 import re
 from subprocess import check_output
 
@@ -20,3 +22,9 @@ def globber(f):
                 expanded_args.extend(glob(a))
         return f(*[Path(p) for p in expanded_args], **kwargs)
     return wrapper
+
+@globber
+def configure(f):
+    cnf = ConfigParser()
+    cnf.read(f)
+    return cnf
