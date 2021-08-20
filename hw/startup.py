@@ -3,4 +3,4 @@ from os import chdir as cd, curdir as pwd, listdir as ls
 from pathlib import Path
 from subprocess import check_output
 
-run = partial(check_output, encoding='utf-8')
+from tools import *

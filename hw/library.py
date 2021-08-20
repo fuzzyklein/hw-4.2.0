@@ -1,3 +1,4 @@
+from datetime import date
 from getpass import getuser
 import json
 import os
@@ -29,6 +30,7 @@ class Library(Program):
                                            password=(Path.home()/self.settings['pass_file']).read_text(),
                                            host='192.168.254.71',
                                            database='library')
+        self.cursor = self.cnx.cursor()
         self.OCLC = 'http://classify.oclc.org'
         self.DDC_FILE = (BASEDIR / 'data/deweysummaries.txt').read_text().split('\n')
         self.BOOKS_DIR = BASEDIR / 'tests/library/books'
@@ -52,22 +54,16 @@ class Library(Program):
                         warn(f'Invalid ISBN in file {p.name} : {l[0].split()[-1]}')
                         break
                     if info:
-                        print()
-                        print(f'Info for {str(p)}:')
-                        pp(info)
+                        if self.DEBUG:
+                            print()
+                            print(f'Info for {str(p)}:')
+                            pp(info)
                         link = f'{self.OCLC}/classify2/ClassifyDemo?search-standnum-txt={info["ISBN-13"]}&startRec=0'
-                        if self.DEBUG: print(f'First Link: {link}')
+                        if self.DEBUG:
+                            print(f'First Link: {link}')
                         response = requests.get(link)
                         soup = BeautifulSoup(response.text, features='lxml', parser='lxml')
                         ddc = soup.find('tbody').find_all('td')[1].text
-                        # if not link:
-                        #     print(f"Could not get a link from OCLC for {str(p)}")
-                        #     if self.DEBUG: trace()
-                        #     return
-                        # link = f"{self.OCLC}{link['href']}"
-                        # response = requests.get(link)
-                        # soup = BeautifulSoup(response.text)
-                        # ddc = soup.find('tbody').find('tr').find_all('td')[1].text
                         numbers = [ddc[0] + '00', ddc[:2] + '0', ddc[:3]]
                         classes = list()
                         for i, n in enumerate(numbers):
@@ -83,6 +79,56 @@ class Library(Program):
                         else:
                             self.info(f'File {dest} already exists.')
 
+                        statement = f'SELECT * FROM books WHERE ISBN=\'{info["ISBN-13"]}\';'
+                        self.cursor.execute(statement)
+                        # result = self.cnx.cmd_query(statement)
+                        if not len(list(self.cursor)):
+                            for author in info["Authors"]:
+                                names = author.split()
+                                statement = f"""SELECT * FROM Authors WHERE First='{author[0]}' AND Last='{author[-1]}';"""
+                                self.cursor.execute(statement)
+                                if not len(list(self.cursor)):
+                                    statement = f"""INSERT INTO Authors (First, Last) VALUES('{names[0]}', '{names[-1]}');"""
+                                    self.cursor.execute(statement)
+                                    if len(names) > 2:
+                                        middle = sum(names[1:-1])
+                                        statement = f"""INSERT INTO Authors (Middle) VALUES('{middle}');"""
+                                pub = info['Publisher']
+                                statement = f"""SELECT FROM pubs * WHERE Publisher='{pub}';"""
+                                if not len(list(self.cursor)):
+                                    statement = f"""INSERT INTO pubs (Publisher) VALUES('{pub}');"""
+                                    self.cursor.execute(statement)
+
+                            statement = f"""INSERT INTO books(Title, Category, Filepath, Date, ISBN) VALUES('{info["Title"]}', '{ddc}', '{p.name}', {date(int(info["Year"]),1,1)}, {info["ISBN-13"]});"""
+                            self.cursor.execute(statement);
+                            self.cnx.commit()
+                            statement = f"""SELECT ID FROM books WHERE TITLE='{info['Title']}';"""
+                            self.cursor.execute(statement)
+                            book_id = self.cursor.fetchone()
+                            print(book_id)
+                            if self.DEBUG: trace()
+                            if not book_id:
+                                warn('Failed to get book record!')
+                                return
+                            else:
+                                print(f'Book ID: {book_id}')
+                                for i, author in enumerate(info['Authors']):
+                                    names = author.split()
+                                    print(f'{names=}')
+                                    statement = f"""SELECT ID FROM Authors WHERE First='{names[0]}' AND Last='{names[-1]}';"""
+                                    self.cursor.execute(statement)
+                                    author_id = self.cursor.fetchone()
+                                    print(f'{author_id=}')
+                                    if not author_id:
+                                        warn('Failed to get author record!')
+                                        return
+                                    else:
+                                        statement = f"""INSERT INTO contribs(Book, Author, Priority) VALUES({book_id[0]}, {author_id[0]}, {i})"""
+                                        print(statement)
+                                        self.cursor.execute(statement)
+                                        self.cnx.commit()
+                        else:
+                            warn(f'Book {info["Title"]} is already in the database.')
                     else:
                         warn(f'Failed to get info for {p.name}')
             else:
@@ -99,8 +145,9 @@ class Library(Program):
         super().process_args()
 
     def shutdown(self):
+        self.cnx.commit()
+        self.cursor.close()
         self.cnx.close()
-
 
 def main():
     Library().run()

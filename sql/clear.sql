@@ -1,0 +1,5 @@
+USE library;
+DELETE FROM Authors WHERE 1;
+DELETE FROM pubs WHERE 1;
+DELETE FROM books WHERE 1;
+DELETE FROM contribs WHERE 1;
