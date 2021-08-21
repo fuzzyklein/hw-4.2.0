@@ -70,11 +70,14 @@ class Library(Program):
                             classes.extend([' '.join(s.split()[1:]) for s in self.DDC_FILE if s.startswith(numbers[i])])
                         classes = [s for s in classes if len(s)]
                         classes = [numbers[i] + ' ' + classes[i] for i in range(3)]
-                        classdir = self.BOOKS_DIR / classes[0] / classes [1] / classes[2]
-                        if not classdir.exists():
-                            os.makedirs(classdir)
-                        dest = classdir / p.name
-                        if not dest.exists():
+                        classdir = '/'.join(classes)
+
+                        ftp = login()
+                        ftp.cwd('/srv/www/htdocs/library/books')
+                        if not exists(ftp, classdir)
+                            make_remote_dirs(classdir)
+                        dest = '/'.join(classdir, p.name)
+                        if not exists(ftp, dest):
                             cp(p, dest, follow_symlinks=self.settings['follow'])
                         else:
                             self.info(f'File {dest} already exists.')
