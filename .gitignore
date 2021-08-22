@@ -3,6 +3,9 @@ data/info4pybooks.json
 run
 tests/
 
+log
+www
+
 .venv/*
 
 # Byte-compiled / optimized / DLL files
