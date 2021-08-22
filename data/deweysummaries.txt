@@ -119,7 +119,6 @@ Consult schedules for complete and exact headings
 Dewey Decimal Classification
 __________________________________________________________________________________________
 
-100
 
 100 Philosophy & psychology
 101 Theory of philosophy
@@ -233,12 +232,11 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-10
 
 Summaries
 __________________________________________________________________________________________
 
-200
+
 
 200 Religion
 201 Religious mythology & social theology
@@ -352,12 +350,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-11
 
 Dewey Decimal Classification
 __________________________________________________________________________________________
 
-300
 
 300 Social sciences
 301 Sociology & anthropology
@@ -471,12 +467,11 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-12
+
 
 Summaries
 __________________________________________________________________________________________
 
-400
 
 400 Language
 401 Philosophy & theory
@@ -590,12 +585,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-13
 
 Dewey Decimal Classification
 __________________________________________________________________________________________
 
-500
 
 500 Natural sciences & mathematics
 501 Philosophy & theory
@@ -709,12 +702,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-14
 
 Summaries
 __________________________________________________________________________________________
 
-600
 
 600  Technology
 601  Philosophy & theory
@@ -828,12 +819,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-15
 
 Dewey Decimal Classification
 __________________________________________________________________________________________
 
-700
 
 700 The arts; fine & decorative arts
 701 Philosophy of fine & decorative arts
@@ -947,12 +936,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-16
 
 Summaries
 __________________________________________________________________________________________
 
-800
 
 800 Literature & rhetoric
 801 Philosophy & theory
@@ -1066,12 +1053,10 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-17
 
 Dewey Decimal Classification
 __________________________________________________________________________________________
 
-900
 
 900 History & geography
 901 Philosophy & theory
@@ -1185,6 +1170,5 @@ ________________________________________________________________________________
 
 Consult schedules for complete and exact headings
 
-18
 
 

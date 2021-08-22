@@ -25,15 +25,21 @@ from program import Program
 class Library(Program):
     def __init__(self):
         super().__init__()
+        self.program_name = 'library'
         self.results = list()
+        self.db_connect()
+        self.OCLC = 'http://classify.oclc.org'
+        self.DDC_FILE = (self.BASEDIR / 'data/deweysummaries.txt').read_text().split('\n')
+        # print(str(self.DDC_FILE))
+        self.BOOKS_DIR = self.BASEDIR / 'tests/library/books'
+
+    def db_connect(self):
         self.cnx = mysql.connector.connect(user=getuser(),
                                            password=(Path.home()/self.settings['pass_file']).read_text(),
-                                           host='192.168.254.71',
-                                           database='library')
+                                           host=self.settings['server_ip'],
+                                           database=self.program_name)
         self.cursor = self.cnx.cursor()
-        self.OCLC = 'http://classify.oclc.org'
-        self.DDC_FILE = (BASEDIR / 'data/deweysummaries.txt').read_text().split('\n')
-        self.BOOKS_DIR = BASEDIR / 'tests/library/books'
+
 
     def process_file(self, p):
         self.info(f'Processing file {str(p)}')
@@ -64,23 +70,29 @@ class Library(Program):
                         response = requests.get(link)
                         soup = BeautifulSoup(response.text, features='lxml', parser='lxml')
                         ddc = soup.find('tbody').find_all('td')[1].text
-                        numbers = [ddc[0] + '00', ddc[:2] + '0', ddc[:3]]
-                        classes = list()
-                        for i, n in enumerate(numbers):
-                            classes.extend([' '.join(s.split()[1:]) for s in self.DDC_FILE if s.startswith(numbers[i])])
-                        classes = [s for s in classes if len(s)]
-                        classes = [numbers[i] + ' ' + classes[i] for i in range(3)]
-                        classdir = '/'.join(classes)
 
+                        # numbers = [ddc[0] + '00', ddc[:2] + '0', ddc[:3]]
+                        # classes = list()
+                        # for i, n in enumerate(numbers):
+                        #     classes.extend([' '.join(s.split()[1:]) for s in self.DDC_FILE if s.startswith(numbers[i])])
+                        #     print(classes)
+                        # classes = [s for s in classes if len(s)]
+                        # trace()
+                        # classes = [numbers[i] + ' ' + classes[i] for i in range(3)]
+                        # classdir = '/'.join(classes)
+
+                        classdir = [s for s in self.DDC_FILE if s.startswith(ddc[:3])][0]
                         ftp = login()
                         ftp.cwd('/srv/www/htdocs/library/books')
-                        if not exists(ftp, classdir)
-                            make_remote_dirs(classdir)
-                        dest = '/'.join(classdir, p.name)
+                        if not exists(ftp, classdir):
+                            ftp.mkd(classdir)
+                        ftp.cwd(classdir)
                         if not exists(ftp, dest):
-                            cp(p, dest, follow_symlinks=self.settings['follow'])
+                            with p.open() as f:
+                                ftp.storlines(f'PUT {p.name}', f)
                         else:
-                            self.info(f'File {dest} already exists.')
+                            self.info(f'File {p.name} already exists.')
+                        ftp.close()
 
                         statement = f'SELECT * FROM books WHERE ISBN=\'{info["ISBN-13"]}\';'
                         self.cursor.execute(statement)

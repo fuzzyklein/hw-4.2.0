@@ -12,6 +12,7 @@ import os.path
 from os import chdir as cd, listdir
 from pathlib import Path
 import pdb
+from pdb import set_trace as trace
 from pprint import pprint as pp
 import re
 import sys
@@ -39,6 +40,7 @@ If the program is installed:
 """
     def __init__(self, settings=None):
         """ Initialize the object. """
+        trace()
         self.DEBUG = False
         self.VERBOSE = False
         self.BASEDIR = Path(__file__).parent.parent.absolute()
@@ -125,9 +127,10 @@ If the program is installed:
         self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
 
     def getargs(self):
+        trace()
         self.args = None
         if self.config:
-            EPILOG_FILE = Path(self.config["ARGUMENTS"]["epilog"])
+            EPILOG_FILE = self.BASEDIR / self.config["ARGUMENTS"]["epilog"]
             if EPILOG_FILE.exists():
                 EPILOG_FILE = EPILOG_FILE.read_text()
             else: EPILOG_FILE = self.DEFAULT_EPILOG
@@ -135,15 +138,15 @@ If the program is installed:
             EPILOG_FILE = self.DEFAULT_EPILOG
         parser = ArgumentParser(self.program_name, EPILOG_FILE)
         assert(parser)
-        if Path(self.config['ARGUMENTS']['args_json_file']).exists():
-            f = open(self.config["ARGUMENTS"]["args_json_file"])
-            try:
-                PARSER_ARGUMENTS = json.load(f)
-            except json.JSONDecodeError:
-                print_exc()
-                PARSER_ARGUMENTS = None
-                # exit(1)
-            f.close()
+        ARGS_FILE = self.BASEDIR / self.config['ARGUMENTS']['args_json_file']
+        if ARGS_FILE.exists():
+            with ARGS_FILE.open() as f:
+                try:
+                    PARSER_ARGUMENTS = json.load(f)
+                except json.JSONDecodeError:
+                    print_exc()
+                    PARSER_ARGUMENTS = None
+                    # exit(1)
         else: PARSER_ARGUMENTS = None
 
         if PARSER_ARGUMENTS != None:
@@ -169,6 +172,12 @@ If the program is installed:
             self.settings['testing'] = False
         if not 'logfile' in self.settings.keys():
             self.settings['logfile'] = str(self.BASEDIR) / f'log/{self.program_name}.log'
+        if not 'follow' in self.settings.keys():
+            self.settings['follow'] = False
+        if not 'all' in self.settings.keys():
+            self.settings['all'] = False
+        if not 'recursive' in self.settings.keys():
+            self.settings['recursive'] = False
 
     def startlog(self):
         # pdb.set_trace()
@@ -245,7 +254,7 @@ If the program is installed:
         assert("args" in self.settings.keys())
         self.file_list = list()
         if "args" in self.settings.keys():
-
+            # trace()
             for f in filter(lambda s: self.settings["all"] or not s.startswith('.'), self.settings["args"]):
                 assert(type(f) is str)
                 self.info(f" Processing {f}...")
@@ -259,9 +268,7 @@ If the program is installed:
         if not p.exists():
             if self.settings["verbose"]:
                 print(f"File {s} does not exist.")
-                return
-            else:
-                print("Verbose switch is off!")
+            return
         elif p.is_symlink():
             self.process_link(p)
         elif p.is_dir():
@@ -287,7 +294,7 @@ If the program is installed:
                 self.process_fname(os.path.join(str(p), f))
 
     def process_file(self, p):
-        self.debug(f"self.program_name is processing file {p}")
+        self.debug(f"{self.program_name} is processing file {p}")
         if self.settings["verbose"]:
             print(f"Processing file {str(p)}.")
         self.file_list.append(Path(p))
