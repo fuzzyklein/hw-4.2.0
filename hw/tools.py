@@ -1,7 +1,7 @@
 from cmd import Cmd
 from configparser import ConfigParser
 from ftplib import FTP
-from functools import partial, wraps
+from functools import partial, singledispatch, wraps
 from glob import glob
 from io import StringIO
 import os
@@ -9,9 +9,11 @@ from os import chdir as cd
 from pathlib import Path
 from pprint import pprint as pp
 import re
+from shutil import copy2 as cp
 from subprocess import check_output
 
 BASEDIR = Path(__file__).parent.parent
+
 columnize = Cmd().columnize
 run = partial(check_output, encoding='utf-8')
 
@@ -107,6 +109,147 @@ def login():
     ftp.login('russell', password)
     return ftp
 
+@globber
+def cat(*args, **kwargs):
+    """Return a string containing the concatenation of any files given as `args`."""
+    s = str()
+    for f in args:
+        if not f.exists():
+            warn(f'File {f.name} does not exist.')
+        else:
+            try:
+                s += f.read_text()
+            except FileNotFoundError:
+                warn(f'File {str(f)} not found!')
+    if not 'quiet' in kwargs.keys() or kwargs['quiet'] == False: print(s)
+    return s
+
+@singledispatch
+def pdf2txt(x, **kwargs):
+    raise NotImplementedError("first arg to `pdf2txt` must be `str` or `Path`")
+
+
+@pdf2txt.register
+def _(p:Path, **kwargs):
+    return pdf2txt(str(p), **kwargs)
+
+@pdf2txt.register
+def _(s:str, **kwargs):
+    """Retrieve the text of a PDF file by calling `pdf2txt.py`."""
+    s = run(['pdf2txt.py', str(p)])
+    if 'lines' in kwargs.keys() and kwargs['lines']:
+        s = s.split('\n')
+    return s
+
+def flatten(L:list):
+    """ Return a list comprising all the elements of any list within the list.
+        Also include any non-list elements of the argument list.
+    """
+    retval = list()
+    for l in L:
+        if issubclass(type(l), list):
+            retval.extend(l)
+        else:
+            retval.append(l)
+    return retval
+
+@globber
+def slurp(*args, **kwargs):
+    """ Open a file(s), read all of its text, and return the result.
+    """
+    return cat(*args, **kwargs).split('\n')
+
+@globber
+def grep(*args, **kwargs):
+    DEBUG = True
+    if DEBUG: print('Debugging `grep().')
+    retval = list()
+    lines = slurp(*args, **kwargs)
+    if not 'pattern' in kwargs.keys():
+        print('`grep()` function requires a pattern.')
+        return retval
+    else:
+        pattern = kwargs['pattern']
+        if DEBUG:
+            print(f'{type(pattern)=}')
+        if not type(pattern) is list:
+            pattern = [pattern]
+        for pat in pattern:
+            print(f'Processing pattern {pat}')
+            if not type(pat) is re.Pattern:
+                pat = re.compile(pat)
+            retval.extend([line for line in lines if pat.match(line)])
+    return retval
+
+def pwd(quiet=False):
+    value = Path(os.curdir).absolute()
+    if not quiet: print(str(value))
+    return value
+
+def csv2html(path=None, code=False):
+    """ Read a (specially designed) CSV file and return it as HTML.
+
+        TODO: Handle the first row specially and optionally.
+    """
+    if type(path) is str:
+        path = Path(path)
+    with path.open() as f:
+        reader = csv.reader(f)
+        output = '<table>'
+        for i, row in enumerate(reader):
+            if code:
+                row[0] = "<code>" + row[0] + "</code>"
+            output+=('<tr><td>{}</td></tr>\n'
+                  .format("</td><td>".join(row)))
+        output+=("</table>\n")
+
+        # print( output)
+        return output
+
+def get_all(path, ignore=set()):
+    """ Get the names of all the variables, classes and functions defined within
+        a module.
+    """
+    result = set()
+    if type(path) is str:
+        path = Path(path)
+    lines = path.read_text().split('\n')
+    regex = re.compile("def (\w*)|class (\w*)|(\w*)\s+=")
+    for s in lines:
+        m = regex.match(s)
+        if m:
+            i = 1
+            while not m.group(i):
+                i += 1
+            assert i < 4
+            word = m.group(i)
+            if word and not word.startswith('_'):
+                result.add(word)
+    return sorted(list(result.difference(ignore)))
+
+def str2path(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        args = [Path(a) for a in args]
+        return f(*args, **kwargs)
+    return wrapper
+
+def path2str(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        args = [str(a) for a in args]
+        return f(*args, **kwargs)
+    return wrapper
+
+@path2str
+def invisible(f):
+    for s in f.split(os.sep):
+        if s.startswith('.'):
+            return True
+    return False
+
 __all__ = [ 'cd', 'pp', 'columnize', 'run', 'public', 'globber', 'configure',
-            'get_file_from_server', 'exists', 'make_remote_dirs', 'login'
+            'get_file_from_server', 'exists', 'make_remote_dirs', 'login',
+            'cat', 'pdf2txt', 'flatten', 'slurp', 'grep', 'pwd', 'get_all',
+            'path2str', 'str2path', 'invisible'
           ]

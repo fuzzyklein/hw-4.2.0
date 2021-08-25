@@ -40,11 +40,12 @@ If the program is installed:
 """
     def __init__(self, settings=None):
         """ Initialize the object. """
-        trace()
         self.DEBUG = False
+        if self.DEBUG: trace()
         self.VERBOSE = False
-        self.BASEDIR = Path(__file__).parent.parent.absolute()
-        self.PROGRAM_NAME = self.BASEDIR.stem.split('-')[0]
+        self.PROGRAM_NAME = Path(__file__).parent.parent.stem.split('-')[0]
+        self.BASEDIR = Path(environ[self.PROGRAM_NAME+'_BASEDIR'])
+        # self.PROGRAM_NAME = self.BASEDIR.stem.split('-')[0]
         if self.VERBOSE:
             print(f'Base directory: {self.BASEDIR}')
             print(f'Program name: {self.PROGRAM_NAME}')
@@ -78,17 +79,18 @@ If the program is installed:
         if self.log:
             self.log.debug(' ' + s)
         else:
-            print(s)
+            if self.DEBUG: print(s)
 
     def info(self, s):
         if self.log:
             self.log.info(' ' + s)
         else:
-            print(s)
+            if self.VERBOSE: print(s)
 
     def configure(self):
-        self.CONFIG_DIR = self.BASEDIR / 'etc'
-        self.config_file = self.CONFIG_DIR / "config.ini"
+        # self.CONFIG_DIR = self.BASEDIR / 'etc'
+        self.config_file = Path(environ[self.PROGRAM_NAME + '_CONFIG_FILE'])
+        self.CONFIG_DIR = self.config_file.parent
         if self.VERBOSE:
             print(str(self.config_file))
         if not self.config_file.exists():
@@ -127,7 +129,7 @@ If the program is installed:
         self.env = {k : v for k, v in environ.items() if k[0].startswith(self.program_name + '_')}
 
     def getargs(self):
-        trace()
+        # if self.DEBUG: trace()
         self.args = None
         if self.config:
             EPILOG_FILE = self.BASEDIR / self.config["ARGUMENTS"]["epilog"]
@@ -180,7 +182,7 @@ If the program is installed:
             self.settings['recursive'] = False
 
     def startlog(self):
-        # pdb.set_trace()
+        # if self.DEBUG: trace()
         # print(f"Log file: {self.settings['logfile']}")
         if 'logfile' in self.settings.keys() and Path(self.settings["logfile"]).exists():
             log_level = logging.WARNING

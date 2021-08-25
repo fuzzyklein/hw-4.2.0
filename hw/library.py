@@ -47,7 +47,7 @@ class Library(Program):
             l = list()
             try:
                 l = list(map(lambda s: str(s).lstrip('b').strip("'"),
-                             [s for s in run(['pdf2txt.py', str(p)]).split('\n') if s.startswith('ISBN')]))
+                             [s for s in pdf2txt(p, lines=True) if s.startswith('ISBN')]))
             except subprocess.CalledProcessError:
                 warn('pdf2txt.py returned an error code!')
                 return

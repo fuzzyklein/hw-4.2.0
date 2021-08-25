@@ -1,10 +1,12 @@
-from functools import partial
-from os import chdir as cd, curdir as pwd, listdir as ls
+from os import environ, sep
 from pathlib import Path
-from pprint import pprint as pp
+import site
 import sys
-from subprocess import check_output
 
 BASEDIR = Path(__file__).parent.parent
+PROGRAM_NAME = BASEDIR.stem.split('-')[0]
+# print(f'{PROGRAM_NAME=}')
+environ[f'{PROGRAM_NAME}_BASEDIR'] = str(BASEDIR)
+environ[f'{PROGRAM_NAME}_CONFIG_FILE'] = str(BASEDIR / ('etc' + sep + 'config.ini'))
 
-sys.path.insert(0, str(BASEDIR / BASEDIR.stem.split('-')[0]))
+site.addsitedir(str(BASEDIR))

@@ -1,7 +1,4 @@
-from pprint import pprint as pp
-import sys
 from traceback import print_exc
-from warnings import warn
 
 from hw.hw import HelloWorld
 
@@ -20,3 +17,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # import os
+    # print(f'{os.environ["hw_BASEDIR"]=}')
+    # print(f'{os.environ["hw_CONFIG_FILE"]=}')
+    #
+    # from pprint import pprint as pp
+    # import sys
+    # print("Python Path:")
+    # pp(sys.path)
+    # print(f'{len(sys.path)=}')
