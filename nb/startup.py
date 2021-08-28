@@ -2,15 +2,17 @@ from pathlib import Path
 import site
 
 BASEDIR = Path.home() / 'Development/hw-4.2.0'
-site.addsitedir(str(BASEDIR / 'hw'))
+site.addsitedir(str(BASEDIR / BASEDIR.stem.split('-')[0]))
 
 from imports import *
-from tools import *
+
+import IPython
+from IPython.display import HTML, Image, Markdown, SVG
 
 HILITE_ME = "http://hilite.me/api"
 
 cd(BASEDIR)
-print(f'Current working directory: {pwd(quiet=True)}')
+print(f'Current working directory: {cwd()}')
 
 def hilite_src_lines(obj):
     codeStr = inspect.getsource(obj)

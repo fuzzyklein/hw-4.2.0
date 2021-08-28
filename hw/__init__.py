@@ -3,6 +3,8 @@ from pathlib import Path
 import site
 import sys
 
+from ansicolortags import printc
+
 BASEDIR = Path(__file__).parent.parent
 PROGRAM_NAME = BASEDIR.stem.split('-')[0]
 # print(f'{PROGRAM_NAME=}')

@@ -17,6 +17,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    printc("ansicolortags importd")
 
     # import os
     # print(f'{os.environ["hw_BASEDIR"]=}')

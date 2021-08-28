@@ -1,5 +1,6 @@
 from cmd import Cmd
 from configparser import ConfigParser
+from enum import IntEnum
 from ftplib import FTP
 from functools import partial, singledispatch, wraps
 from glob import glob
@@ -11,6 +12,10 @@ from pprint import pprint as pp
 import re
 from shutil import copy2 as cp
 from subprocess import check_output
+
+from bs4 import BeautifulSoup
+
+import files
 
 BASEDIR = Path(__file__).parent.parent
 
@@ -167,7 +172,7 @@ def grep(*args, **kwargs):
     lines = slurp(*args, **kwargs)
     if not 'pattern' in kwargs.keys():
         print('`grep()` function requires a pattern.')
-        return retval
+        return None
     else:
         pattern = kwargs['pattern']
         if DEBUG:
@@ -185,6 +190,8 @@ def pwd(quiet=False):
     value = Path(os.curdir).absolute()
     if not quiet: print(str(value))
     return value
+
+cwd = partial(pwd, quiet=True)
 
 def csv2html(path=None, code=False):
     """ Read a (specially designed) CSV file and return it as HTML.
@@ -248,8 +255,56 @@ def invisible(f):
             return True
     return False
 
+class BS(BeautifulSoup):
+    def __init__(self, s):
+        super().__init__(s, features="html.parser")
+
+START_COLOR_CODE = '\033['
+END_COLOR_CODE = '\033[0m'
+
+class FG_COLORS(IntEnum):
+    BLACK = 30
+    RED = 31
+    GREEN = 32
+    YELLOW = 33
+    BLUE = 34
+    MAGENTA = 35
+    CYAN = 36
+    WHITE = 37
+    BRIGHT_BLACK = 90
+    BRIGHT_RED = 91
+    BRIGHT_GREEN = 92
+    BRIGHT_YELLOW = 93
+    BRIGHT_BLUE = 94
+    BRIGHT_MAGENTA = 95
+    BRIGHT_CYAN = 96
+    BRIGHT_WHITE = 97
+
+class BG_COLORS(IntEnum):
+    BLACK = 30
+    RED = 31
+    GREEN = 32
+    YELLOW = 33
+    BLUE = 34
+    MAGENTA = 35
+    CYAN = 36
+    WHITE = 37
+    BRIGHT_BLACK = 90
+    BRIGHT_RED = 91
+    BRIGHT_GREEN = 92
+    BRIGHT_YELLOW = 93
+    BRIGHT_BLUE = 94
+    BRIGHT_MAGENTA = 95
+    BRIGHT_CYAN = 96
+    BRIGHT_WHITE = 97
+
+
+def color_str(s, style=1, fg=FG_COLORS.BLACK, bg=BG_COLORS.BLACK):
+    return START_COLOR_CODE + f'{style};{fg};{bg}m{s}' + END_COLOR_CODE
+
 __all__ = [ 'cd', 'pp', 'columnize', 'run', 'public', 'globber', 'configure',
             'get_file_from_server', 'exists', 'make_remote_dirs', 'login',
             'cat', 'pdf2txt', 'flatten', 'slurp', 'grep', 'pwd', 'get_all',
-            'path2str', 'str2path', 'invisible'
+            'path2str', 'str2path', 'invisible', 'BS', 'cwd', 'color_str',
+            'FG_COLORS', 'BG_COLORS'
           ]
