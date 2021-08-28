@@ -12,6 +12,8 @@ from pprint import pprint as pp
 import re
 from shutil import copy2 as cp
 from subprocess import check_output
+from traceback import print_exc
+from warnings import warn
 
 from bs4 import BeautifulSoup
 
@@ -302,9 +304,21 @@ class BG_COLORS(IntEnum):
 def color_str(s, style=1, fg=FG_COLORS.BLACK, bg=BG_COLORS.BLACK):
     return START_COLOR_CODE + f'{style};{fg};{bg}m{s}' + END_COLOR_CODE
 
+def str2list(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return f(*[s.split() for s in args], **kwargs)
+    return wrapper
+
+@str2list
+def sh(s):
+    if '|' in s:
+        raise Exception("Pipes don't work in system calls worth a damn!")
+    return run(s)
+
 __all__ = [ 'cd', 'pp', 'columnize', 'run', 'public', 'globber', 'configure',
             'get_file_from_server', 'exists', 'make_remote_dirs', 'login',
             'cat', 'pdf2txt', 'flatten', 'slurp', 'grep', 'pwd', 'get_all',
             'path2str', 'str2path', 'invisible', 'BS', 'cwd', 'color_str',
-            'FG_COLORS', 'BG_COLORS'
+            'FG_COLORS', 'BG_COLORS', 'sh'
           ]
