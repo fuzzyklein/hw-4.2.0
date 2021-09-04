@@ -9,6 +9,7 @@ Skeleton program that sets up the following functions:
 * Log messages to a file.
 * Access a database.
 * Interact with the user through a command line driven interface.
+* Run the Python `http.server` locally and execute a CGI script.
 * Provide a framework for testing.
 * Provide a method of installation (setup.py)
 * Tools for self-documentation
@@ -17,4 +18,4 @@ Skeleton program that sets up the following functions:
 * System and network administration tools
 * An easily-managed TODO list
 
-## Examples
+## Synopsis

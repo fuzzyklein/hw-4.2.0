@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC
+    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Math Entry Field</title>
+    <meta charset="utf-8" />
+    <base href="http://localhost:8000"/>
+    <link rel="stylesheet" type="text/css" href="html/js/mathquill-0.10.1/mathquill.css"/>
+    <link rel="stylesheet" type="text/css" href="html/css/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      MathML: {
+        extensions: ["content-mathml.js"]
+      }
+    });
+    </script>
+    <script src="html/js/mathquill-0.10.1/mathquill.js"></script>
+    <script>
+      var MQ = MathQuill.getInterface(2);
+    </script>
+
+</head>
+<body>
+  <form name="cgi-form" id="cgi-form">
+  <fieldset>
+  <legend>Enter a formula:&nbsp;</legend>
+  <p><span id="input_text" name="input_text"></span></p>
+  <script>
+    var answerSpan = document.getElementById('input_text');
+    var answerMathField = MQ.MathField(answerSpan, {
+      handlers: {
+        edit: function() {
+          // var enteredMath = answerMathField.latex(); // Get entered math in LaTeX format
+          // checkAnswer(enteredMath);
+        }
+      }
+    });
+  </script>
+  <input type="reset" />
+  </fieldset>
+  </form>
+
+</body>
+</html>
