@@ -6,4 +6,4 @@ directory:
 If the program is installed:
 
     ncv
-    python3 -m ncv
+    python3 -m hw

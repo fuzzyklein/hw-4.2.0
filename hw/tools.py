@@ -143,7 +143,7 @@ def _(p:Path, **kwargs):
 @pdf2txt.register
 def _(s:str, **kwargs):
     """Retrieve the text of a PDF file by calling `pdf2txt.py`."""
-    s = run(['pdf2txt.py', str(p)])
+    s = run(['pdf2txt.py', s])
     if 'lines' in kwargs.keys() and kwargs['lines']:
         s = s.split('\n')
     return s
@@ -316,9 +316,17 @@ def sh(s):
         raise Exception("Pipes don't work in system calls worth a damn!")
     return run(s)
 
+def str2path_method(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        args = [args[0], *[Path(a) for a in args[1:]]]
+        return f(*args, **kwargs)
+    return wrapper
+
+
 __all__ = [ 'cd', 'pp', 'columnize', 'run', 'public', 'globber', 'configure',
             'get_file_from_server', 'exists', 'make_remote_dirs', 'login',
             'cat', 'pdf2txt', 'flatten', 'slurp', 'grep', 'pwd', 'get_all',
             'path2str', 'str2path', 'invisible', 'BS', 'cwd', 'color_str',
-            'FG_COLORS', 'BG_COLORS', 'sh'
+            'FG_COLORS', 'BG_COLORS', 'sh', 'str2path_method'
           ]

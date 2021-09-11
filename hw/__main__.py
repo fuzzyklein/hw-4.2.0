@@ -1,6 +1,6 @@
 from traceback import print_exc
 
-from hw.hw import HelloWorld
+from hw import HelloWorld
 
 def main():
     """ main()
@@ -17,12 +17,13 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    printc("ansicolortags importd")
+
+    # import ansicolortags
+    # ansicolortags.printc("<blue>ansicolortags imported<reset>")
 
     # import os
-    # print(f'{os.environ["hw_BASEDIR"]=}')
-    # print(f'{os.environ["hw_CONFIG_FILE"]=}')
+    # print(f'{os.environ["hw-4.2_BASEDIR"]=}')
+    # print(f'{os.environ["hw-4.2_CONFIG_FILE"]=}')
     #
     # from pprint import pprint as pp
     # import sys

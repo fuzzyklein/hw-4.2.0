@@ -7,7 +7,7 @@ from io import StringIO
 import json
 import logging
 import os
-from os import environ
+from os import environ, sep
 import os.path
 from os import chdir as cd, listdir
 from pathlib import Path
@@ -18,6 +18,7 @@ import re
 import sys
 from traceback import print_exc
 import warnings
+
 from xdg.BaseDirectory import xdg_config_home as CONFIG_DIR, xdg_data_home as DATA_DIR
 
 from tools import *
@@ -43,8 +44,8 @@ If the program is installed:
         self.DEBUG = False
         if self.DEBUG: trace()
         self.VERBOSE = False
-        self.PROGRAM_NAME = Path(__file__).parent.parent.stem.split('-')[0]
-        self.BASEDIR = Path(environ[self.PROGRAM_NAME+'_BASEDIR'])
+        self.BASEDIR = Path(__file__).parent.parent
+        self.PROGRAM_NAME = self.BASEDIR.stem.split('-')[0]
         # self.PROGRAM_NAME = self.BASEDIR.stem.split('-')[0]
         if self.VERBOSE:
             print(f'Base directory: {self.BASEDIR}')
@@ -89,7 +90,7 @@ If the program is installed:
 
     def configure(self):
         # self.CONFIG_DIR = self.BASEDIR / 'etc'
-        self.config_file = Path(environ[self.PROGRAM_NAME + '_CONFIG_FILE'])
+        self.config_file = self.BASEDIR / ('etc' + sep + 'config.ini')
         self.CONFIG_DIR = self.config_file.parent
         if self.VERBOSE:
             print(str(self.config_file))
@@ -253,15 +254,15 @@ If the program is installed:
             print(file=s)
             pp(self.settings["args"], stream=s)
             self.debug(s.getvalue())
+            trace()
         assert("args" in self.settings.keys())
         self.file_list = list()
         if "args" in self.settings.keys():
             # trace()
-            for f in filter(lambda s: self.settings["all"] or not s.startswith('.'), self.settings["args"]):
+            for f in filter(lambda s: self.settings["all"] or not invisible(s), self.settings["args"]):
                 assert(type(f) is str)
                 self.info(f" Processing {f}...")
                 for name in glob(f, recursive=self.settings["recursive"]):
-
                     self.process_fname(name)
 
     def process_fname(self, s):

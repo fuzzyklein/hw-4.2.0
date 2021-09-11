@@ -15,11 +15,11 @@ function venv() {
   esac
 }
 
-if [ ! -d ${venv} ]; then
-   virtual=1; venv a
-fi
-[[ $virtual ]] && source $venv/bin/activate; # printf "venv active\n"
-export PYTHONSTARTUP=hw/startup.py
+# if [ ! -d ${venv} ]; then
+#    virtual=1; venv a
+# fi
+# [[ $virtual ]] && source $venv/bin/activate; # printf "venv active\n"
+export PYTHONSTARTUP=nb/startup.py
 export startup=PYTHONSTARTUP
 python3 -m hw $@
-[[ $virtual ]] && deactivate
+# [[ $virtual ]] && deactivate

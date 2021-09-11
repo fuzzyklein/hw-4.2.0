@@ -1,4 +1,4 @@
-# `hw`
+# `hw-4.2`
 
 * Print the usual greeting.
 * Load a configuration file.
