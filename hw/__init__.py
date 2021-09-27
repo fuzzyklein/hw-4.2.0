@@ -1,14 +1,12 @@
-from os import environ, sep
-from pathlib import Path
-import site
-import sys
+""" hw
 
-from ansicolortags import printc
+    A simple and lightweight framework for a Python command line application.
 
-BASEDIR = Path(__file__).parent.parent
-PROGRAM_NAME = BASEDIR.stem.split('-')[0]
-# print(f'{PROGRAM_NAME=}')
-environ[f'{PROGRAM_NAME}_BASEDIR'] = str(BASEDIR)
-environ[f'{PROGRAM_NAME}_CONFIG_FILE'] = str(BASEDIR / ('etc' + sep + 'config.ini'))
+    For information on how to edit this file most effectively:
 
-site.addsitedir(str(BASEDIR))
+        https://docs.python.org/3/library/pydoc.html#module-pydoc
+        https://realpython.com/documenting-python-code/#docstring-formats
+        https://docutils.sourceforge.io/rst.html
+
+    Source code repository: https://github.com/fuzzyklein/hw-4.2.1
+"""
