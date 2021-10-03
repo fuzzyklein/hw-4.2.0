@@ -1,0 +1,2 @@
+ansicolortags==0.4
+pkg_resources==0.0.0
