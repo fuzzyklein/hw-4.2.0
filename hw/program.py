@@ -10,11 +10,11 @@ import sys
 
 from ansicolortags import printc
 
-from arguments import Arguments
-from configure import Configure
-from environment import Environment
-from globals import *
-from tools import invisible, str2path_method
+from .arguments import Arguments
+from .configure import Configure
+from .environment import Environment
+from .globals import *
+from .tools import invisible, str2path_method
 
 class Program():
     """ Abstract class that processes command line arguments as files. """

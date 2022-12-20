@@ -1,8 +1,8 @@
 from cmd import Cmd
 from traceback import print_exc
 
-from program import Program
-from tools import run
+from .program import Program
+from .tools import run
 
 class Driver(Cmd, Program):
     def __init__(self, *args, settings=None, **kwargs):

@@ -38,23 +38,23 @@ from warnings import warn
 import zipfile
 
 from bs4 import BeautifulSoup
-from file import Magic
+# from file import Magic
 from IPython.display import HTML, Markdown
 import isbnlib
 from markdown import markdown as md
 import mysql.connector
-import netsnmp
-from pandas import DataFrame, Series
-import pdfminer
-import pkg_resources
+# import netsnmp
+# from pandas import DataFrame, Series
+# import pdfminer
+# import pkg_resources
 import requests
-from walkdir import filtered_walk
-import xdg
-import xdg.BaseDirectory
-from xdg.BaseDirectory import xdg_config_home as CONFIG_DIR, xdg_data_home as DATA_DIR
-import xdg.util
+# from walkdir import filtered_walk
+# import xdg
+# import xdg.BaseDirectory
+# from xdg.BaseDirectory import xdg_config_home as CONFIG_DIR, xdg_data_home as DATA_DIR
+# import xdg.util
 
-from constants import *
-from driver import Driver
-from program import Program
-from tools import *
+# from constants import *
+# from driver import Driver
+# from program import Program
+# from tools import *

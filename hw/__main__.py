@@ -3,8 +3,8 @@
 from pprint import pp
 import sys
 
-from driver import Driver
-from hw import HelloWorld
+from .driver import Driver
+from .hw import HelloWorld
 
 if __name__ == '__main__':
     if {'-t', '--testing'}.intersection(sys.argv):

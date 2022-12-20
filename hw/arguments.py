@@ -5,7 +5,7 @@ import inspect
 import logging
 import sys
 
-from globals import PROGRAM
+from .globals import PROGRAM
 
 STD_OPTS = [[[],
   {"dest": "args",
@@ -33,7 +33,7 @@ STD_OPTS = [[[],
 class Arguments(dict):
     """ Parse the command line arguments and store the relevant values. """
 
-    import __init__
+    import hw.__init__ as __init__
 
     INIT_DOCSTR = [line for line in inspect.getdoc(__init__).split('\n') if line]
     DESCRIPTION = INIT_DOCSTR[1]

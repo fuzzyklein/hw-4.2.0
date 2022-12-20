@@ -1,18 +1,20 @@
 from pathlib import Path
 import site
 
-BASEDIR = Path.home() / 'Development/hw-4.2.0'
+BASEDIR = Path(r'C:\msys64\home\fuzzy\hw-4.2.0')
 site.addsitedir(str(BASEDIR / BASEDIR.stem.split('-')[0]))
 
-from imports import *
+# from imports import *
 
 import IPython
 from IPython.display import HTML, Image, Markdown, SVG
 
 HILITE_ME = "http://hilite.me/api"
 
+cwd = Path.cwd
 cd(BASEDIR)
 print(f'Current working directory: {cwd()}')
+
 
 def hilite_src_lines(obj):
     codeStr = inspect.getsource(obj)

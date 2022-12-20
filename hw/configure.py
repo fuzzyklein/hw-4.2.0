@@ -9,8 +9,8 @@ from warnings import warn
 
 from ansicolortags import printc
 
-from globals import *
-from tools import *
+from .globals import *
+from .tools import *
 
 class Configure(dict):
     """ Same thing as a `ConfigParser`, but simpler. """
